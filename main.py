@@ -23,12 +23,15 @@ try:
         pdf_reader = PdfReader(file)
 
         output_dir = Path('textbook_audio')
+        output_dir.mkdir(exist_ok=True)
 
         # Extract text from PDF
         for page_num in range((start - 1), end):
             print(f'Processing page {page_num + 1}')
             page = pdf_reader.pages[page_num]
             text = page.extract_text()
+            if len(text) < 100:
+                print(f'Page {page_num + 1} only has {len(text)} words. Skipping page.')
 
             print(f'Extracted {len(text)} characters')
 
