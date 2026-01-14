@@ -11,10 +11,10 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 
 start = int(input('Starting page: '))
 end = int(input('Ending page: '))
-while end < start:
-    print('Ending page cannot be earlier that starting page.')
-    start = input('Starting page: ')
-    end = input('Ending page: ')
+while end <= start:
+    print('Ending page cannot include or be earlier than starting page.')
+    start = int(input('Starting page: '))
+    end = int(input('Ending page: '))
 
 
 # Load PDF and extract text from pages 0-4
@@ -22,6 +22,7 @@ try:
     with open(pdf_path, 'rb') as file:
         pdf_reader = PdfReader(file)
 
+        # Create a dir for audio (doesn't fail if exists. Exist is ok.)
         output_dir = Path('textbook_audio')
         output_dir.mkdir(exist_ok=True)
 
@@ -30,8 +31,15 @@ try:
             print(f'Processing page {page_num + 1}')
             page = pdf_reader.pages[page_num]
             text = page.extract_text()
+            
+            lines = text.split('\n')
+            # Remove first and last line (header/footer)
+            text = '\n'.join(lines[1:-1])
+
             if len(text) < 100:
+                print(f'Small file text: {text}')
                 print(f'Page {page_num + 1} only has {len(text)} words. Skipping page.')
+                continue
 
             print(f'Extracted {len(text)} characters')
 
@@ -47,7 +55,6 @@ try:
             response.write_to_file(str(output_file))
             print(f'Saved {output_file}')
 
-            time.sleep(1)
 
     first_page = output_dir / f'page_{start}.mp3'
     os.startfile(f'{first_page}')
