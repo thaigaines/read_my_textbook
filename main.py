@@ -55,10 +55,21 @@ try:
             response.write_to_file(str(output_file))
             print(f'Saved {output_file}')
 
+    # Checking for first available page.
+    first_page_exists = None
+    for page_offset in range(start + end - 1):
+        candidate = output_dir / f'page_{start + page_offset}.mp3'
+        if candidate.exists():
+            first_page_exists = candidate
+            break
 
-    first_page = output_dir / f'page_{start}.mp3'
-    os.startfile(f'{first_page}')
-        
+    if first_page_exists:
+        os.startfile(f'{first_page_exists}')
+        print(f'Playing {first_page_exists}')
+    else:
+        print('No audio files found to play')
+
+
 except RateLimitError:
     print("Exceeded rate limit.")
     quit()
