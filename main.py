@@ -62,7 +62,7 @@ try:
                     input=text
                 )
 
-                # Save with page number
+                # Save mp3 with page number
                 response.write_to_file(str(output_file))
                 print(f'Saved {output_file}')
 
