@@ -22,7 +22,7 @@ while end <= start:
     start = int(input('Starting page: '))
     end = int(input('Ending page: '))
 
-# Load PDF and extract text from pages 0-4
+# Load PDF and extract text
 try:
     with open(pdf_path, 'rb') as file:
         pdf_reader = PdfReader(file)
@@ -65,6 +65,7 @@ try:
                 # Save mp3 with page number
                 response.write_to_file(str(output_file))
                 print(f'Saved {output_file}')
+
 
     # Open file based on prior input
     if user_input == 'y':
